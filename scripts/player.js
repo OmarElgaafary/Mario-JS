@@ -1,0 +1,82 @@
+import { HandleInput } from "./handle-input.js";
+
+export class Player {
+    constructor(game) {
+        this.game = game;
+        this.spriteSheetWidth = 220;
+        this.spriteSheetHeight = 104;
+        this.width = this.spriteSheetWidth / 3;
+        this.height = this.spriteSheetHeight;
+        this.x = 0;
+        this.y = game.height - this.height;
+        this.vy = 0;
+        this.speed = 2.5;
+        this.gravityWeight = 0.2;
+        this.marioWalking = document.getElementById('mario-walk');
+        this.marioWalkingLeft = document.getElementById('mario-walk-left');
+        this.marioJumpRight = document.getElementById('mario-jump-right');
+        this.marioJumpLeft = document.getElementById('mario-jump-left');
+        this.handleInput = new HandleInput();
+        this.frameX = 0;
+        this.gameFrame = 0;
+    }
+
+    updatePlayer() {
+
+        if (this.handleInput.keys.includes('ArrowRight'))
+            this.x += this.speed;
+        else if (this.handleInput.keys.includes('ArrowLeft'))
+            this.x -= this.speed;
+
+        if (this.x + this.width > this.game.width) this.x = this.game.width - this.width
+        else if (this.x < 0) this.x = 0;
+
+        if (this.handleInput.keys.includes('Space') && this.onGround())
+            this.vy = -10;
+        this.y += this.vy;
+        if (!this.onGround())
+            this.vy += this.gravityWeight;
+        else this.vy = 0;
+
+    }
+
+    onGround() {
+        return this.y >= this.game.height - this.height;
+    }
+
+    drawPlayer(context) {
+        context.strokeStyle = 'black';
+        context.strokeRect(this.x, this.y, this.width, this.height);
+        if (!this.onGround()) {
+            let jumpingImage = this.handleInput.lastkey === 'ArrowRight' ? this.marioJumpRight : this.marioJumpLeft;
+            context.drawImage(jumpingImage, 0, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.spriteSheetWidth / 3, this.spriteSheetHeight)
+        }
+        else if (this.handleInput.lastkey === 'ArrowRight') {
+            if (this.handleInput.keys.includes('ArrowRight')) {
+                context.drawImage(this.marioWalking, this.width * this.frameX, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.spriteSheetWidth / 3, this.spriteSheetHeight)
+
+            } else {
+                context.drawImage(this.marioWalking, 0, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.spriteSheetWidth / 3, this.spriteSheetHeight)
+
+            }
+
+        }
+        else if (this.handleInput.lastkey === 'ArrowLeft') {
+            if (this.handleInput.keys.includes('ArrowLeft')) {
+                context.drawImage(this.marioWalkingLeft, this.width * this.frameX, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.spriteSheetWidth / 3, this.spriteSheetHeight)
+
+            } else {
+                context.drawImage(this.marioWalkingLeft, 0, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.spriteSheetWidth / 3, this.spriteSheetHeight)
+
+            }
+        }
+
+        if (this.frameX > 2)
+            this.frameX = 0;
+        else if (this.gameFrame % 16 === 0)
+            this.frameX++;
+
+        this.gameFrame++;
+
+    }
+}
