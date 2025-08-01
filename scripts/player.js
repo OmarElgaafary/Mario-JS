@@ -49,24 +49,24 @@ export class Player {
         context.strokeRect(this.x, this.y, this.width, this.height);
         if (!this.onGround()) {
             let jumpingImage = this.handleInput.lastkey === 'ArrowRight' ? this.marioJumpRight : this.marioJumpLeft;
-            context.drawImage(jumpingImage, 0, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.spriteSheetWidth / 3, this.spriteSheetHeight)
+            context.drawImage(jumpingImage, 0, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.width, this.spriteSheetHeight)
         }
         else if (this.handleInput.lastkey === 'ArrowRight') {
             if (this.handleInput.keys.includes('ArrowRight')) {
-                context.drawImage(this.marioWalking, this.width * this.frameX, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.spriteSheetWidth / 3, this.spriteSheetHeight)
+                context.drawImage(this.marioWalking, this.width * this.frameX, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.width, this.spriteSheetHeight)
 
             } else {
-                context.drawImage(this.marioWalking, 0, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.spriteSheetWidth / 3, this.spriteSheetHeight)
+                context.drawImage(this.marioWalking, 0, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.width, this.spriteSheetHeight)
 
             }
 
         }
         else if (this.handleInput.lastkey === 'ArrowLeft') {
             if (this.handleInput.keys.includes('ArrowLeft')) {
-                context.drawImage(this.marioWalkingLeft, this.width * this.frameX, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.spriteSheetWidth / 3, this.spriteSheetHeight)
+                context.drawImage(this.marioWalkingLeft, this.width * this.frameX, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.width, this.spriteSheetHeight)
 
             } else {
-                context.drawImage(this.marioWalkingLeft, 0, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.spriteSheetWidth / 3, this.spriteSheetHeight)
+                context.drawImage(this.marioWalkingLeft, 0, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.width, this.spriteSheetHeight)
 
             }
         }
