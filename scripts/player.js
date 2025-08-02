@@ -8,9 +8,9 @@ export class Player {
         this.width = this.spriteSheetWidth / 3;
         this.height = this.spriteSheetHeight;
         this.x = 0;
-        this.y = game.height - this.height;
+        this.y = this.game.height - this.height - this.game.grassHeight + 9;
         this.vy = 0;
-        this.speed = 2.5;
+        this.speed = 2;
         this.gravityWeight = 0.2;
         this.marioWalking = document.getElementById('mario-walk');
         this.marioWalkingLeft = document.getElementById('mario-walk-left');
@@ -19,6 +19,7 @@ export class Player {
         this.handleInput = new HandleInput();
         this.frameX = 0;
         this.gameFrame = 0;
+        this.isMoving = false;
     }
 
     updatePlayer() {
@@ -41,7 +42,7 @@ export class Player {
     }
 
     onGround() {
-        return this.y >= this.game.height - this.height;
+        return this.y >= this.game.height - this.height - this.game.grassHeight;
     }
 
     drawPlayer(context) {
@@ -54,9 +55,11 @@ export class Player {
         else if (this.handleInput.lastkey === 'ArrowRight') {
             if (this.handleInput.keys.includes('ArrowRight')) {
                 context.drawImage(this.marioWalking, this.width * this.frameX, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.width, this.spriteSheetHeight)
+                this.isMoving = true;
 
             } else {
                 context.drawImage(this.marioWalking, 0, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.width, this.spriteSheetHeight)
+                this.isMoving = false;
 
             }
 
@@ -64,9 +67,11 @@ export class Player {
         else if (this.handleInput.lastkey === 'ArrowLeft') {
             if (this.handleInput.keys.includes('ArrowLeft')) {
                 context.drawImage(this.marioWalkingLeft, this.width * this.frameX, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.width, this.spriteSheetHeight)
+                this.isMoving = false;
 
             } else {
                 context.drawImage(this.marioWalkingLeft, 0, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.width, this.spriteSheetHeight)
+                this.isMoving = false;
 
             }
         }
