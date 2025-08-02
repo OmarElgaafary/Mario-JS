@@ -22,10 +22,11 @@ window.addEventListener('load', () => {
         }
 
         update() {
-            this.gameSpeed = this.player.isMoving ? 1 : 0;
             this.player.updatePlayer();
             this.marioGrass.updateBackGround(this.gameSpeed);
             this.marioBackGround.updateBackGround(this.gameSpeed);
+            this.gameSpeed = this.player.isMoving && this.player.marioLastDiscovered < this.player.x ? 1 : 0;
+
         }
 
         draw(context) {

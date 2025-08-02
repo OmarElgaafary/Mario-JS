@@ -16,6 +16,7 @@ export class Player {
         this.marioWalkingLeft = document.getElementById('mario-walk-left');
         this.marioJumpRight = document.getElementById('mario-jump-right');
         this.marioJumpLeft = document.getElementById('mario-jump-left');
+        this.marioLastDiscovered;
         this.handleInput = new HandleInput();
         this.frameX = 0;
         this.gameFrame = 0;
@@ -48,6 +49,8 @@ export class Player {
     drawPlayer(context) {
         context.strokeStyle = 'black';
         context.strokeRect(this.x, this.y, this.width, this.height);
+        if (!this.marioLastDiscovered || this.x > this.marioLastDiscovered) this.marioLastDiscovered = this.x;
+
         if (!this.onGround()) {
             let jumpingImage = this.handleInput.lastkey === 'ArrowRight' ? this.marioJumpRight : this.marioJumpLeft;
             context.drawImage(jumpingImage, 0, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.width, this.spriteSheetHeight)
