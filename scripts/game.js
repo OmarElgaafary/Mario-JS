@@ -1,5 +1,6 @@
 import { Player } from "./player.js";
-import { Layer } from './layer.js'
+import { Layer } from "./layer.js";
+import { Block } from './block.js';
 window.addEventListener('load', () => {
 
     const canvas = document.getElementById('canvas');
@@ -17,24 +18,39 @@ window.addEventListener('load', () => {
             this.player = new Player(this);
             this.gameSpeed = 0;
             this.backGroundMultipler = 1;
-            this.marioGrass = new Layer(document.getElementById('mario-map-grass'), this, this.grassHeight, this.height - this.grassHeight);
-            this.marioBackGround = new Layer(document.getElementById('mario-map-background'), this, 427, 0);
+            this.marioBackGround = new Layer(document.getElementById('mario-map-sky'), this, 427, 0);
+            this.Blocks = [];
+            this.block1 = this.Blocks.push(new Block({ x: 0, y: this.height - 75 }, { width: this.width * 3, height: 75 }, this));
+            this.block2 = this.Blocks.push(new Block({ x: this.Blocks[this.Blocks.length - 1].x + this.Blocks[this.Blocks.length - 1].width + 200, y: this.height - 75 }, { width: 1500, height: 75 }, this));
+            this.block3 = this.Blocks.push(new Block({ x: this.Blocks[this.Blocks.length - 1].x + this.Blocks[this.Blocks.length - 1].width + 200, y: this.height - 75 }, { width: 1500, height: 75 }, this));
+        }
+
+        updateBlocks() {
+            this.Blocks.forEach(block => {
+                block.x -= 5;
+            })
         }
 
         update() {
-
-            this.gameSpeed = this.player.isMoving && this.player.x === this.width / 3 ? 2 : 0;
+            if (this.player.isMoving && this.player.x === this.width / 3) {
+                this.gameSpeed = 2;
+                this.updateBlocks();
+            }
+            else
+                this.gameSpeed = 0;
 
             this.player.updatePlayer();
-            this.marioGrass.updateBackGround(this.gameSpeed);
             this.marioBackGround.updateBackGround(this.gameSpeed);
+            console.log(this.player.y);
         }
 
         draw(context) {
-            this.marioGrass.drawBackGround(context);
             this.marioBackGround.drawBackGround(context);
             this.player.drawPlayer(context);
-
+            this.Blocks.forEach(block => {
+                block.drawBlock(context);
+            }
+            )
         }
 
     }

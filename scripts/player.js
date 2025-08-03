@@ -24,6 +24,13 @@ export class Player {
 
     updatePlayer() {
 
+        if (this.game.Blocks[0].isOnGrass() && this.y + this.height > this.game.height - this.game.grassHeight) {
+            this.y += 5;
+            this.handleInput.keys = [];
+            return;
+        }
+
+
         if (this.handleInput.keys.includes('ArrowRight') && this.x < this.game.width / 3)
             this.x += this.speed;
         else if (this.handleInput.keys.includes('ArrowLeft'))
