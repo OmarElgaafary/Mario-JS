@@ -1,7 +1,7 @@
 import { Player } from "./player.js";
 import { Layer } from "./layer.js";
 import { Block } from './block.js';
-import { Wall } from './walls.js';
+import { Wall, LuckyBlock } from './walls.js';
 
 window.addEventListener('load', () => {
 
@@ -27,6 +27,7 @@ window.addEventListener('load', () => {
             this.block3 = this.Blocks.push(new Block({ x: this.Blocks[this.Blocks.length - 1].x + this.Blocks[this.Blocks.length - 1].width + 200, y: this.height - 75 }, { width: 1500, height: 75 }, this));
             this.Walls = [];
             this.wall1 = this.Walls.push(new Wall({ x: this.player.width * 4, y: this.height - this.grassHeight - this.player.height * 2 }, this));
+            this.wall2 = this.Walls.push(new LuckyBlock({ x: this.Walls[0].x + this.Walls[0].width, y: this.height - this.grassHeight - this.player.height * 2 }, this));
 
         }
 
@@ -40,7 +41,8 @@ window.addEventListener('load', () => {
         }
 
         update() {
-            console.log(this.Walls[0].collision());
+            this.Walls[0].collision();
+            this.Walls[1].collision();
             if (this.player.isMoving && this.player.x === this.width / 3) {
                 this.gameSpeed = 2;
                 this.updateBlocks();
@@ -59,7 +61,12 @@ window.addEventListener('load', () => {
                 block.drawBlock(context);
             }
             )
+            if (this.Walls[1].bumped) this.Walls[1].luckyStarAnimation(context);
+
             this.Walls[0].drawWall(context);
+            this.Walls[1].drawWall(context);
+            // this.Walls[1].luckyStarAnimation(context);
+
 
         }
 
@@ -74,6 +81,9 @@ window.addEventListener('load', () => {
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
         newGame.update();
         newGame.draw(ctx);
+        ctx.font = "32px 'Press Start 2P'";
+        ctx.fillStyle = 'white';
+        ctx.fillText('Score', 50, 50);
         requestAnimationFrame(animate);
     }
 
