@@ -1,3 +1,5 @@
+
+
 export class Wall {
     constructor(position, game) {
         this.type = 'block';
@@ -17,7 +19,7 @@ export class Wall {
         context.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
 
-    collision(context) {
+    collision() {
         if (this.detectCollision()) {
             const player = this.game.player;
             const prevX = player.x - player.vx;
@@ -103,6 +105,7 @@ export class LuckyBlock extends Wall {
                     if (this.starY === this.startingStarY) {
                         clearInterval(fallInterval);
                         this.bumped = false;
+                        this.coinCollected = true;
                         return;
                     }
                     this.starY++;
@@ -114,10 +117,36 @@ export class LuckyBlock extends Wall {
 
     blockMovement() {
         super.blockMovement();
-        this.starMovement();
+        if (!this.coinCollected) this.starMovement();
     }
-
-
-
 }
 
+
+
+export function initalizeWalls(player, game) {
+    let Walls = [];
+    Walls.push(new LuckyBlock({ x: player.width * 6, y: player.height * 2 }, game));
+
+    Walls.push(new Wall({ x: player.width * 8, y: player.height * 2 }, game));
+    Walls.push(new LuckyBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
+    Walls.push(new Wall({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
+    Walls.push(new LuckyBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
+    Walls.push(new Wall({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
+
+    Walls.push(new Wall({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 85, y: player.height * 2 }, game));
+    Walls.push(new LuckyBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
+    Walls.push(new Wall({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
+
+
+    Walls.push(new Wall({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 2, y: player.height * 2 }, game));
+    Walls.push(new Wall({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
+    Walls.push(new Wall({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
+    Walls.push(new Wall({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
+    Walls.push(new Wall({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
+    Walls.push(new Wall({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
+    Walls.push(new Wall({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
+    Walls.push(new Wall({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
+
+
+    return Walls;
+}

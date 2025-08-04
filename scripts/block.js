@@ -27,3 +27,17 @@ export class Block {
         }
     }
 }
+
+export function initalizeBlocks(game) {
+    let Blocks = [];
+    Blocks.push(new Block({ x: 0, y: game.height - 75 }, { width: game.width * 3, height: 75 }, game));
+    Blocks.push(new Block({ x: Blocks[Blocks.length - 1].x + Blocks[Blocks.length - 1].width + 200, y: game.height - 75 }, { width: 1500, height: 75 }, game));
+    Blocks.push(new Block({ x: Blocks[Blocks.length - 1].x + Blocks[Blocks.length - 1].width, y: game.height - 75 }, { width: 1500, height: 75 }, game));
+    Blocks.push(new Block({ x: Blocks[Blocks.length - 1].x + Blocks[Blocks.length - 1].width, y: game.height - 75 }, { width: 1500, height: 75 }, game));
+    Blocks.push(new Block({ x: Blocks[Blocks.length - 1].x + Blocks[Blocks.length - 1].width + 200, y: game.height - 75 }, { width: 1500, height: 75 }, game));
+    Blocks.push(new Block({ x: Blocks[Blocks.length - 1].x + Blocks[Blocks.length - 1].width, y: game.height - 75 }, { width: 1500, height: 75 }, game));
+    Blocks.push(new Block({ x: Blocks[Blocks.length - 1].x + Blocks[Blocks.length - 1].width, y: game.height - 75 }, { width: 1500, height: 75 }, game));
+
+
+    return Blocks;
+}
