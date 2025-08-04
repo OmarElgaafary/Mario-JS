@@ -7,7 +7,6 @@ export class Block {
         this.x = position.x;
         this.y = position.y;
         this.grassImage = document.getElementById('mario-map-block');
-        console.log(this.width, this.height, this.x, this.y);
     }
 
     drawBlock(context) {

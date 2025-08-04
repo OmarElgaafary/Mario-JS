@@ -9,6 +9,7 @@ export class Player {
         this.height = this.spriteSheetHeight;
         this.x = 0;
         this.y = this.game.height - this.height - this.game.grassHeight + 9;
+        this.vx = 0;
         this.vy = 0;
         this.speed = 2;
         this.gravityWeight = 0.2;
@@ -20,26 +21,33 @@ export class Player {
         this.frameX = 0;
         this.gameFrame = 0;
         this.isMoving = false;
+        this.onBlock = false;
     }
 
     updatePlayer() {
 
+        // pits 
         if (this.game.Blocks[0].isOnGrass() && this.y + this.height > this.game.height - this.game.grassHeight) {
             this.y += 5;
             this.handleInput.keys = [];
             return;
         }
 
-
-        if (this.handleInput.keys.includes('ArrowRight') && this.x < this.game.width / 3)
-            this.x += this.speed;
-        else if (this.handleInput.keys.includes('ArrowLeft'))
-            this.x -= this.speed;
+        if (this.handleInput.keys.includes('ArrowRight') && this.x < this.game.width / 3) {
+            this.vx = this.speed;
+            this.x += this.vx;
+        }
+        else if (this.handleInput.keys.includes('ArrowLeft')) {
+            this.vx = -this.speed;
+            this.x += this.vx;
+        }
+        else
+            this.vx = 0;
 
         if (this.x + this.width > this.game.width) this.x = this.game.width - this.width
         else if (this.x < 0) this.x = 0;
 
-        if (this.handleInput.keys.includes('Space') && this.onGround())
+        if (this.handleInput.keys.includes('Space') && (this.onGround() || this.onBlock))
             this.vy = -10;
         this.y += this.vy;
         if (!this.onGround())
@@ -56,11 +64,11 @@ export class Player {
         context.strokeStyle = 'black';
         context.strokeRect(this.x, this.y, this.width, this.height);
 
-        if (!this.onGround()) {
+        if (!this.onGround() && !this.onBlock) {
             let jumpingImage = this.handleInput.lastkey === 'ArrowRight' ? this.marioJumpRight : this.marioJumpLeft;
             context.drawImage(jumpingImage, 0, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.width, this.spriteSheetHeight)
         }
-        else if (this.handleInput.lastkey === 'ArrowRight') {
+        else if (this.handleInput.direction.x > 0) {
             if (this.handleInput.keys.includes('ArrowRight')) {
                 context.drawImage(this.marioWalking, this.width * this.frameX, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.width, this.spriteSheetHeight)
                 this.isMoving = true;
@@ -72,7 +80,7 @@ export class Player {
             }
 
         }
-        else if (this.handleInput.lastkey === 'ArrowLeft') {
+        else if (this.handleInput.direction.x < 0) {
             if (this.handleInput.keys.includes('ArrowLeft')) {
                 context.drawImage(this.marioWalkingLeft, this.width * this.frameX, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.width, this.spriteSheetHeight)
                 this.isMoving = false;
