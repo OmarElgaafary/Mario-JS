@@ -22,13 +22,27 @@ export class Block {
     collision() {
         if (this.detectCollision()) {
             const player = this.game.player;
-            const prevX = player.x - player.vx;
+
+            let VX = 0;
+            if (player.handleInput.keys.includes('ArrowRight')) VX = 5;
+            else if (player.handleInput.keys.includes('ArrowLeft')) VX = -5;
+
+            const prevX = player.x - VX;
             const prevY = player.y - player.vy;
 
             const wasAbove = prevY + player.height <= this.y;
             const wasBelow = prevY >= this.y + this.height;
             const wasLeft = prevX + player.width <= this.x;
             const wasRight = prevX >= this.x + this.width;
+
+            if (wasAbove)
+                console.log('wasAbove');
+            else if (wasBelow)
+                console.log('wasBelow');
+            else if (wasLeft)
+                console.log('wasLeft');
+            else if (wasRight)
+                console.log('wasRight');
 
             if (wasAbove && player.y + player.height > this.y) {
                 player.y = this.y - player.height;
@@ -38,13 +52,18 @@ export class Block {
             if (wasBelow && player.y < this.y + this.height) {
                 player.y = this.y + this.height;
                 player.vy = 0;
-                if (this.type === 'brickBlock' || this.type === 'luckyBlock') {
+                if (this.type === 'brickBlock' || this.type === 'luckyBlock')
                     this.blockMovement();
-                    console.log(this.type);
-                }
             }
-            if (wasLeft && player.x + player.width > this.x) player.x = this.x - player.width;
-            if (wasRight && player.x < this.x + this.width) player.x = this.x + this.width;
+            if (wasLeft && player.x + player.width >= this.x) {
+                player.x = this.x - player.width;
+                console.log('i did something')
+            }
+            if (wasRight && player.x <= this.x + this.width) player.x = this.x + this.width;
+            console.log(prevX + player.width, player.x + player.width, this.x);
+            // previous is less, current is more
+
+
         }
 
         return null;
@@ -80,7 +99,16 @@ export class Block {
     }
 }
 
-export class BrickBlock extends Block {
+class TubeBlock extends Block {
+    constructor(position, game, imagePosition) {
+        super(position, game);
+        this.type = 'tubeBlock';
+        this.width = this.height = 100;
+        this.image = imagePosition === 'Top' ? document.getElementById('mario-blocks-pipe-top') : document.getElementById('mario-blocks-pipe-middle');
+    }
+};
+
+class BrickBlock extends Block {
     constructor(position, game) {
         super(position, game);
         this.type = 'brickBlock';
@@ -88,7 +116,7 @@ export class BrickBlock extends Block {
     }
 };
 
-export class LuckyBlock extends BrickBlock {
+class LuckyBlock extends BrickBlock {
     constructor(position, game) {
         super(position, game);
         this.type = 'luckyBlock';
@@ -143,6 +171,18 @@ export function initalizeWalls(player, game) {
     Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
     Walls.push(new LuckyBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
     Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
+    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 5, y: game.height - game.grassHeight - 100 }, game, 'Top'));
+    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 8, y: game.height - game.grassHeight - 100 }, game, 'Middle'));
+    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x, y: game.height - game.grassHeight - 100 * 2 }, game, 'Top'));
+    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 6, y: game.height - game.grassHeight - 100 }, game, 'Middle'));
+    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x, y: game.height - game.grassHeight - 100 * 2 }, game, 'Top'));
+    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 6, y: game.height - game.grassHeight - 100 }, game, 'Middle'));
+    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x, y: game.height - game.grassHeight - 100 * 2 }, game, 'Top'));
+    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 6, y: game.height - game.grassHeight - 100 }, game, 'Top'));
+
+
+
+
 
     Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 85, y: player.height * 2 }, game));
     Walls.push(new LuckyBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));

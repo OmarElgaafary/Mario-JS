@@ -1,7 +1,7 @@
 import { Player } from "./player.js";
 import { Layer } from "./layer.js";
 import { Grass, initalizeGrass } from './grass.js';
-import { Block, LuckyBlock, initalizeWalls } from './block.js';
+import { Block, initalizeWalls } from './block.js';
 
 window.addEventListener('load', () => {
 
@@ -35,18 +35,20 @@ window.addEventListener('load', () => {
         }
 
         update() {
+            this.player.updatePlayer();
+            this.marioBackGround.updateBackGround(this.gameSpeed);
+
             this.Walls.forEach((wall) => {
                 wall.collision();
             });
-            if (this.player.isMoving && this.player.x === this.width / 3) {
+            if (this.player.isMoving && Math.floor(this.player.x) >= Math.floor(this.width / 3)) {
                 this.gameSpeed = 2;
                 this.updateGrass();
             }
             else
                 this.gameSpeed = 0;
 
-            this.player.updatePlayer();
-            this.marioBackGround.updateBackGround(this.gameSpeed);
+
         }
 
         draw(context) {

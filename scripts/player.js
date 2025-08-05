@@ -11,7 +11,7 @@ export class Player {
         this.y = this.game.height - this.height - this.game.grassHeight + 9;
         this.vx = 0;
         this.vy = 0;
-        this.speed = 2;
+        this.speed = 5;
         this.gravityWeight = 0.22;
         this.marioWalking = document.getElementById('mario-walk');
         this.marioWalkingLeft = document.getElementById('mario-walk-left');
@@ -33,7 +33,7 @@ export class Player {
             return;
         }
 
-        if (this.handleInput.keys.includes('ArrowRight') && this.x < this.game.width / 3) {
+        if (this.handleInput.keys.includes('ArrowRight') && Math.floor(this.x) < Math.floor(this.game.width / 3)) {
             this.vx = this.speed;
             this.x += this.vx;
         }
