@@ -1,7 +1,7 @@
 import { Player } from "./player.js";
 import { Layer } from "./layer.js";
-import { Block, initalizeBlocks } from './block.js';
-import { Wall, LuckyBlock, initalizeWalls } from './walls.js';
+import { Grass, initalizeGrass } from './grass.js';
+import { Block, LuckyBlock, initalizeWalls } from './block.js';
 
 window.addEventListener('load', () => {
 
@@ -21,12 +21,12 @@ window.addEventListener('load', () => {
             this.gameSpeed = 0;
             this.backGroundMultipler = 1;
             this.marioBackGround = new Layer(document.getElementById('mario-map-sky'), this, 427, 0);
-            this.Blocks = initalizeBlocks(this);
+            this.Grass = initalizeGrass(this);
             this.Walls = initalizeWalls(this.player, this);
         }
 
-        updateBlocks() {
-            this.Blocks.forEach(block => {
+        updateGrass() {
+            this.Grass.forEach(block => {
                 block.x -= 5;
             })
             this.Walls.forEach((wall) => {
@@ -40,7 +40,7 @@ window.addEventListener('load', () => {
             });
             if (this.player.isMoving && this.player.x === this.width / 3) {
                 this.gameSpeed = 2;
-                this.updateBlocks();
+                this.updateGrass();
             }
             else
                 this.gameSpeed = 0;
@@ -52,13 +52,13 @@ window.addEventListener('load', () => {
         draw(context) {
             this.marioBackGround.drawBackGround(context);
             this.player.drawPlayer(context);
-            this.Blocks.forEach(block => {
-                block.drawBlock(context);
+            this.Grass.forEach(block => {
+                block.drawGrass(context);
             }
             )
             this.Walls.forEach((wall) => {
                 if (wall.bumped) wall.luckyStarAnimation(context);
-                wall.drawWall(context);
+                wall.drawBlock(context);
             });
         }
 
