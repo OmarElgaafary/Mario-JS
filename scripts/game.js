@@ -2,6 +2,7 @@ import { Player } from "./player.js";
 import { Layer } from "./layer.js";
 import { Grass, initalizeGrass } from './grass.js';
 import { Block, initalizeWalls } from './block.js';
+import { Goomba } from './enemies.js'
 
 window.addEventListener('load', () => {
 
@@ -24,6 +25,8 @@ window.addEventListener('load', () => {
             this.marioBackGround = new Layer(document.getElementById('mario-map-sky'), this, 427, 0);
             this.Grass = initalizeGrass(this);
             this.Walls = initalizeWalls(this.player, this);
+            this.Goombas = [];
+            this.goomba1 = this.Goombas.push(new Goomba({ x: this.player.width * 8, y: this.height - this.grassHeight - this.BLOCK_SIZE }, this));
         }
 
         updateGrass() {
@@ -33,14 +36,23 @@ window.addEventListener('load', () => {
             this.Walls.forEach((wall) => {
                 wall.x -= 5;
             })
+            this.Goombas.forEach((goomba) => {
+                goomba.x -= 5;
+            })
         }
 
         update() {
             this.player.updatePlayer();
+
+            if (this.Goombas[0].status) {
+                this.Goombas[0].collision(this.player);
+                this.Goombas[0].update();
+            }
+
             this.marioBackGround.updateBackGround(this.gameSpeed);
 
             this.Walls.forEach((wall) => {
-                wall.collision();
+                wall.collision(this.player);
             });
             if (this.player.isMoving && Math.floor(this.player.x) >= Math.floor(this.width / 3)) {
                 this.gameSpeed = 2;
@@ -54,7 +66,6 @@ window.addEventListener('load', () => {
 
         draw(context) {
             this.marioBackGround.drawBackGround(context);
-            this.player.drawPlayer(context);
             this.Grass.forEach(block => {
                 block.drawGrass(context);
             }
@@ -63,6 +74,18 @@ window.addEventListener('load', () => {
                 if (wall.bumped) wall.luckyStarAnimation(context);
                 wall.drawBlock(context);
             });
+            if (this.player.status)
+                this.player.drawPlayer(context);
+            else {
+                this.player.marioDeathAnimation(context);
+            }
+
+
+            if (this.Goombas[0].status && this.player.status) {
+                this.Goombas[0].drawBlock(context);
+
+            }
+
         }
 
     }

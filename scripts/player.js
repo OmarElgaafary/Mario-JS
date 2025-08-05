@@ -17,11 +17,15 @@ export class Player {
         this.marioWalkingLeft = document.getElementById('mario-walk-left');
         this.marioJumpRight = document.getElementById('mario-jump-right');
         this.marioJumpLeft = document.getElementById('mario-jump-left');
-        this.handleInput = new HandleInput();
+        this.marioDeath1 = document.getElementById('mario-death-1');
+        this.marioDeath2 = document.getElementById('mario-death-2');
+        this.handleInput = new HandleInput(this);
         this.frameX = 0;
         this.gameFrame = 0;
         this.isMoving = false;
         this.onBlock = false;
+        this.status = true;
+        this.tempImage;
     }
 
     updatePlayer() {
@@ -100,6 +104,18 @@ export class Player {
             this.frameX++;
 
         this.gameFrame++;
+
+    }
+
+    marioDeathAnimation(context) {
+        this.gameFrame++;
+        this.spriteSheetHeight = this.spriteSheetWidth = 50;
+        if (!this.tempImage) this.tempImage = this.marioDeath1;
+        if (this.gameFrame % 16 == 0) {
+            if (this.tempImage === this.marioDeath1) this.tempImage = this.marioDeath2
+            else this.tempImage = this.marioDeath1
+        }
+        context.drawImage(this.tempImage, this.x, this.y, this.width, this.height)
 
     }
 }

@@ -20,10 +20,9 @@ export class Block {
         context.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
 
-    collision() {
-        const player = this.game.player;
-
-        if (this.detectCollision()) {
+    collision(target) {
+        const player = target;
+        if (this.detectCollision(player)) {
 
             let VX = 0;
             if (player.handleInput.keys.includes('ArrowRight')) VX = 5;
@@ -38,33 +37,65 @@ export class Block {
             const wasRight = prevX >= this.x + this.width;
 
             if (wasAbove && player.y + player.height > this.y) {
+                if (this.type === 'goomba' && player === this.game.player) {
+                    this.speed = 0;
+                    this.stomped = true;
+                    this.height = 24;
+                    this.y = this.game.height - this.game.grassHeight - this.height;
+                    this.image = document.getElementById('mario-goomba-stomp');
+                    const deathInterval = setTimeout(() => {
+                        this.status = false;
+                    }, 500)
+                }
                 player.y = this.y - player.height;
                 player.vy = 0;
                 player.onBlock = true;
             } else player.onBlock = false;
             if (wasBelow && player.y < this.y + this.height) {
+                if (this.type === 'goomba' && player === this.game.player) {
+                    // player.speed = 0;
+                    // player.status = false;
+                    // setInterval(() => {
+                    //     player
+                    // });
+
+                }
                 player.y = this.y + this.height;
                 player.vy = 0;
                 if (this.type === 'brickBlock' || this.type === 'luckyBlock')
                     this.blockMovement();
             }
             if (wasLeft && player.x + player.width >= this.x) {
+                if (this.type === 'goomba' && player === this.game.player) {
+                    player.speed = 0;
+                    player.status = false;
+                    setInterval(() => {
+                        if (player.y < this.game.height) {
+                            player.y += 2.5;
+                        }
+                        else player.y = 500;
+                    }, 20)
+
+                }
                 player.x = this.x - player.width;
                 console.log('i did something')
             }
             if (wasRight && player.x <= this.x + this.width) player.x = this.x + this.width;
 
-        } 
+        }
 
         return null;
     }
 
-    detectCollision() {
-        const player = this.game.player;
+    detectCollision(target) {
+        const player = target;
         if (player.y + player.height > this.y && this.y + this.height > player.y
             && player.x + player.width > this.x && this.x + this.width > player.x
-        )
+        ) {
+            console.log(this)
             return true
+
+        }
         else {
             return false
         }
