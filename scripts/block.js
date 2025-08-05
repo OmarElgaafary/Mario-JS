@@ -21,8 +21,9 @@ export class Block {
     }
 
     collision() {
+        const player = this.game.player;
+
         if (this.detectCollision()) {
-            const player = this.game.player;
 
             let VX = 0;
             if (player.handleInput.keys.includes('ArrowRight')) VX = 5;
@@ -53,7 +54,7 @@ export class Block {
             }
             if (wasRight && player.x <= this.x + this.width) player.x = this.x + this.width;
 
-        }
+        } 
 
         return null;
     }
@@ -64,8 +65,9 @@ export class Block {
             && player.x + player.width > this.x && this.x + this.width > player.x
         )
             return true
-        else
+        else {
             return false
+        }
     }
 
     blockMovement() {

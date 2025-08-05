@@ -33,6 +33,8 @@ export class Player {
             return;
         }
 
+        if (this.vy !== 0) this.onBlock = false;
+
         if (this.handleInput.keys.includes('ArrowRight') && Math.floor(this.x) < Math.floor(this.game.width / 3)) {
             this.vx = this.speed;
             this.x += this.vx;
@@ -47,7 +49,7 @@ export class Player {
         if (this.x + this.width > this.game.width) this.x = this.game.width - this.width
         else if (this.x < 0) this.x = 0;
 
-        if (this.handleInput.keys.includes('Space') && (this.onGround() || this.onBlock))
+        if (this.handleInput.keys.includes('Space') && (this.onGround() || (this.onBlock && !this.onGround())))
             this.vy = -10;
         this.y += this.vy;
         if (!this.onGround())
