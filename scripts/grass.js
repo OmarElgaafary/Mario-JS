@@ -31,13 +31,8 @@ export class Grass {
 export function initalizeGrass(game) {
     let GrassArray = [];
     GrassArray.push(new Grass({ x: 0, y: game.height - 75 }, { width: game.width * 3, height: 75 }, game));
-    GrassArray.push(new Grass({ x: GrassArray[GrassArray.length - 1].x + GrassArray[GrassArray.length - 1].width + 200, y: game.height - 75 }, { width: 1500, height: 75 }, game));
-    GrassArray.push(new Grass({ x: GrassArray[GrassArray.length - 1].x + GrassArray[GrassArray.length - 1].width, y: game.height - 75 }, { width: 1500, height: 75 }, game));
-    GrassArray.push(new Grass({ x: GrassArray[GrassArray.length - 1].x + GrassArray[GrassArray.length - 1].width, y: game.height - 75 }, { width: 1500, height: 75 }, game));
-    GrassArray.push(new Grass({ x: GrassArray[GrassArray.length - 1].x + GrassArray[GrassArray.length - 1].width + 200, y: game.height - 75 }, { width: 1500, height: 75 }, game));
-    GrassArray.push(new Grass({ x: GrassArray[GrassArray.length - 1].x + GrassArray[GrassArray.length - 1].width, y: game.height - 75 }, { width: 1500, height: 75 }, game));
-    GrassArray.push(new Grass({ x: GrassArray[GrassArray.length - 1].x + GrassArray[GrassArray.length - 1].width, y: game.height - 75 }, { width: 1500, height: 75 }, game));
-
-
+    GrassArray.push(new Grass({ x: GrassArray[GrassArray.length - 1].x + GrassArray[GrassArray.length - 1].width + 200, y: game.height - 75 }, { width: 1100, height: 75 }, game));
+    GrassArray.push(new Grass({ x: GrassArray[GrassArray.length - 1].x + GrassArray[GrassArray.length - 1].width + 200, y: game.height - 75 }, { width: 1500 * 2 + 100, height: 75 }, game));
+    GrassArray.push(new Grass({ x: GrassArray[GrassArray.length - 1].x + GrassArray[GrassArray.length - 1].width + 200, y: game.height - 75 }, { width: 1500 + 300, height: 75 }, game));
     return GrassArray;
 }

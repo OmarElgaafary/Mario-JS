@@ -12,7 +12,7 @@ export class Player {
         this.vx = 0;
         this.vy = 0;
         this.speed = 5;
-        this.gravityWeight = 0.22;
+        this.gravityWeight = 0.2;
         this.marioWalking = document.getElementById('mario-walk');
         this.marioWalkingLeft = document.getElementById('mario-walk-left');
         this.marioJumpRight = document.getElementById('mario-jump-right');

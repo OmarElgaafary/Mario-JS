@@ -14,6 +14,7 @@ window.addEventListener('load', () => {
 
     class Game {
         constructor(context) {
+            this.BLOCK_SIZE = 50;
             this.width = context.width;
             this.height = context.height;
             this.grassHeight = 75;

@@ -1,3 +1,4 @@
+let Walls = [];
 
 
 export class Block {
@@ -35,15 +36,6 @@ export class Block {
             const wasLeft = prevX + player.width <= this.x;
             const wasRight = prevX >= this.x + this.width;
 
-            if (wasAbove)
-                console.log('wasAbove');
-            else if (wasBelow)
-                console.log('wasBelow');
-            else if (wasLeft)
-                console.log('wasLeft');
-            else if (wasRight)
-                console.log('wasRight');
-
             if (wasAbove && player.y + player.height > this.y) {
                 player.y = this.y - player.height;
                 player.vy = 0;
@@ -60,9 +52,6 @@ export class Block {
                 console.log('i did something')
             }
             if (wasRight && player.x <= this.x + this.width) player.x = this.x + this.width;
-            console.log(prevX + player.width, player.x + player.width, this.x);
-            // previous is less, current is more
-
 
         }
 
@@ -103,7 +92,7 @@ class TubeBlock extends Block {
     constructor(position, game, imagePosition) {
         super(position, game);
         this.type = 'tubeBlock';
-        this.width = this.height = 100;
+        this.width = this.height = game.BLOCK_SIZE * 2;
         this.image = imagePosition === 'Top' ? document.getElementById('mario-blocks-pipe-top') : document.getElementById('mario-blocks-pipe-middle');
     }
 };
@@ -160,10 +149,40 @@ class LuckyBlock extends BrickBlock {
     }
 }
 
+function createStairs(game, height, reverse, blockSpace, peak) {
+    if (height === 1) {
+        if (reverse) Walls.push(new Block({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
+        else Walls.push(new Block({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 3, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
+        return;
+    }
 
+    for (let i = 1; i < height + 1; i++) {
+        if (reverse && height === peak && i === 1) Walls.push(new Block({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * blockSpace, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
+        else if (i === 1) Walls.push(new Block({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
+        else {
+            Walls.push(new Block({ x: Walls[Walls.length - 1].x, y: game.height - game.grassHeight - game.BLOCK_SIZE * i }, game));
+
+        }
+    }
+}
+
+function createBlockStack(game, height) {
+    for (let i = 1; i < height + 1; i++) {
+        if (i === 1) Walls.push(new Block({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
+        else Walls.push(new Block({ x: Walls[Walls.length - 1].x, y: game.height - game.grassHeight - game.BLOCK_SIZE * i }, game));
+    }
+
+}
+
+function makeStairs(game, height, reverse, blockSpace, peak) {
+    for (let i = 1; i <= height; i++) createStairs(game, i, reverse, blockSpace, peak);
+}
+
+function makeReverseStairs(game, height, reverse, blockSpace, peak) {
+    for (let i = height; i >= 0; i--) createStairs(game, i, reverse, blockSpace, peak);
+}
 
 export function initalizeWalls(player, game) {
-    let Walls = [];
     Walls.push(new LuckyBlock({ x: player.width * 6, y: player.height * 2 }, game));
 
     Walls.push(new BrickBlock({ x: player.width * 8, y: player.height * 2 }, game));
@@ -171,35 +190,68 @@ export function initalizeWalls(player, game) {
     Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
     Walls.push(new LuckyBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
     Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
-    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 5, y: game.height - game.grassHeight - 100 }, game, 'Top'));
-    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 8, y: game.height - game.grassHeight - 100 }, game, 'Middle'));
-    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x, y: game.height - game.grassHeight - 100 * 2 }, game, 'Top'));
-    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 6, y: game.height - game.grassHeight - 100 }, game, 'Middle'));
-    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x, y: game.height - game.grassHeight - 100 * 2 }, game, 'Top'));
-    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 6, y: game.height - game.grassHeight - 100 }, game, 'Middle'));
-    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x, y: game.height - game.grassHeight - 100 * 2 }, game, 'Top'));
-    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 6, y: game.height - game.grassHeight - 100 }, game, 'Top'));
+    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 5, y: game.height - game.grassHeight - game.BLOCK_SIZE * 2 }, game, 'Top'));
+    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 8, y: game.height - game.grassHeight - game.BLOCK_SIZE * 2 }, game, 'Middle'));
+    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x, y: game.height - game.grassHeight - game.BLOCK_SIZE * 2 * 2 }, game, 'Top'));
+    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 6, y: game.height - game.grassHeight - game.BLOCK_SIZE * 2 }, game, 'Middle'));
+    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x, y: game.height - game.grassHeight - game.BLOCK_SIZE * 2 * 2 }, game, 'Top'));
+    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 6, y: game.height - game.grassHeight - game.BLOCK_SIZE * 2 }, game, 'Middle'));
+    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x, y: game.height - game.grassHeight - game.BLOCK_SIZE * 2 * 2 }, game, 'Top'));
+    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 6, y: game.height - game.grassHeight - game.BLOCK_SIZE * 2 }, game, 'Top'));
 
+    Walls.push(new LuckyBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 4, y: player.height * 2 }, game));
 
-
-
-
-    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 85, y: player.height * 2 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 20, y: player.height * 2 }, game));
     Walls.push(new LuckyBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
     Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
 
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
 
-    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 2, y: player.height * 2 }, game));
-    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
-    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
-    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
-    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
-    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
-    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
-    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
-    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
-    Walls.push(new Block({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 7, y: player.height * 1 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+    Walls.push(new LuckyBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+    Walls.push(new LuckyBlock({ x: Walls[Walls.length - 1].x, y: player.height * 2 }, game));
 
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 4, y: player.height * 2 }, game));
+    Walls.push(new LuckyBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 2 }, game));
+
+    Walls.push(new LuckyBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 6, y: player.height * 2 }, game));
+    Walls.push(new LuckyBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 4, y: player.height * 2 }, game));
+    Walls.push(new LuckyBlock({ x: Walls[Walls.length - 1].x, y: player.height * 0 }, game));
+    Walls.push(new LuckyBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 4, y: player.height * 2 }, game));
+
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 4, y: player.height * 2 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 5, y: player.height * 1 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 4, y: player.height * 1 }, game));
+    Walls.push(new LuckyBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+    Walls.push(new LuckyBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+    Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
+
+
+    makeStairs(game, 4, false, 3, 4);
+    makeReverseStairs(game, 4, true, 3, 4);
+    makeStairs(game, 4, false, 3, 4)
+    createBlockStack(game, 4);
+
+    makeReverseStairs(game, 4, true, 5.2, 4);
+
+    makeStairs(game, 6, false, 1, 6);
+    createBlockStack(game, 6);
 
 
     return Walls;
