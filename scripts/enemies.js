@@ -13,6 +13,13 @@ export class Goomba extends Block {
         this.stomped = false;
     }
 
+    drawGoomba(context) {
+        if (this.stomped) {
+            this.drawDeathPoints(context);
+        }
+        context.drawImage(this.image, this.x, this.y, this.width, this.height);
+    }
+
     update() {
 
         if (this.game.Grass[0].isOnGrass() && this.y + this.height > this.game.height - this.game.grassHeight) {
@@ -43,6 +50,15 @@ export class Goomba extends Block {
         }
 
 
+    }
+
+    drawDeathPoints(context) {
+        context.font = "18px 'Press Start 2P'";
+        context.fillStyle = 'white';
+        context.fillText('100', this.x, this.y - this.game.BLOCK_SIZE / 2);
+        setTimeout(() => {
+            context.clearRect(this.x, this.y - this.game.BLOCK_SIZE / 2 , this.game.BLOCK_SIZE, this.game.BLOCK_SIZE);
+        }, 3000)
     }
 
 }

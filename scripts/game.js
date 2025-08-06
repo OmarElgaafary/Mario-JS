@@ -66,7 +66,7 @@ window.addEventListener('load', () => {
 
             this.Goombas.forEach((goomba) => {
                 if (goomba.status && this.player.status) {
-                    goomba.collision(this.player);
+                    goomba.collision(context, this.player);
                     goomba.update();
                 }
             });
@@ -75,7 +75,7 @@ window.addEventListener('load', () => {
 
             this.Walls.forEach((wall) => {
                 if (wall.type !== 'flag')
-                    wall.collision(this.player);
+                    wall.collision(context, this.player);
             });
 
 
@@ -112,7 +112,7 @@ window.addEventListener('load', () => {
 
             this.Goombas.forEach((goomba) => {
                 if (goomba.status && this.player.status) {
-                    goomba.drawBlock(context);
+                    goomba.drawGoomba(context);
                 }
             });
 

@@ -20,7 +20,7 @@ export class Block {
         context.drawImage(this.image, this.x, this.y, this.width, this.height);
     }
 
-    collision(target) {
+    collision(context, target) {
         const player = target;
         if (this.detectCollision(player)) {
 
@@ -38,14 +38,7 @@ export class Block {
 
             if (wasAbove && player.y + player.height > this.y) {
                 if (this.type === 'goomba' && player === this.game.player) {
-                    this.speed = 0;
-                    this.stomped = true;
-                    this.height = 24;
-                    this.y = this.game.height - this.game.grassHeight - this.height;
-                    this.image = document.getElementById('mario-goomba-stomp');
-                    const deathInterval = setTimeout(() => {
-                        this.status = false;
-                    }, 500)
+                    marioStomp(context, this, this.game);
                 }
                 player.y = this.y - player.height;
                 player.vy = 0;
@@ -141,6 +134,19 @@ function marioDeath(goomba, player) {
         }, 20)
     })
 }
+
+const marioStomp = (context, goomba, game) => {
+    goomba.drawDeathPoints(context);
+    goomba.speed = 0;
+    goomba.stomped = true;
+    goomba.height = 24;
+    goomba.y = game.height - game.grassHeight - goomba.height;
+    goomba.image = document.getElementById('mario-goomba-stomp');
+    const deathInterval = setTimeout(() => {
+        goomba.status = false;
+    }, 500)
+};
+
 
 class TubeBlock extends Block {
     constructor(position, game, imagePosition) {
