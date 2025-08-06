@@ -8,7 +8,6 @@ export class HandleInput {
             if ((e.key === 'ArrowLeft' ||
                 e.key === 'ArrowRight'
             ) && !this.keys.includes(e.key) && player.status) {
-                if (this.keys.length > 0) this.keys = [];
                 this.keys.push(e.key);
                 this.lastkey = e.key;
                 if (e.key === 'ArrowRight') this.direction = { x: 1 };
