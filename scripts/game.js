@@ -2,7 +2,7 @@ import { Player } from "./player.js";
 import { Layer } from "./layer.js";
 import { Grass, initalizeGrass } from './grass.js';
 import { Block, initalizeWalls, getFlag } from './block.js';
-import { Goomba } from './enemies.js'
+import { Goomba, getGoombas } from './enemies.js'
 
 window.addEventListener('load', () => {
 
@@ -25,8 +25,7 @@ window.addEventListener('load', () => {
             this.marioBackGround = new Layer(document.getElementById('mario-map-sky'), this, 427, 0);
             this.Grass = initalizeGrass(this);
             this.Walls = initalizeWalls(this.player, this);
-            this.Goombas = [];
-            this.goomba1 = this.Goombas.push(new Goomba({ x: this.player.width * 8, y: this.height - this.grassHeight - this.BLOCK_SIZE }, this));
+            this.Goombas = getGoombas(this);
             this.Flag = getFlag();
             this.status = true;
             this.winImage;
@@ -65,10 +64,12 @@ window.addEventListener('load', () => {
                 this.player.updatePlayer();
 
 
-            if (this.Goombas[0].status && this.player.status) {
-                this.Goombas[0].collision(this.player);
-                this.Goombas[0].update();
-            }
+            this.Goombas.forEach((goomba) => {
+                if (goomba.status && this.player.status) {
+                    goomba.collision(this.player);
+                    goomba.update();
+                }
+            });
 
             this.marioBackGround.updateBackGround(this.gameSpeed);
 
@@ -109,18 +110,17 @@ window.addEventListener('load', () => {
                 }
             }
 
-
-            if (this.Goombas[0].status && this.player.status) {
-                this.Goombas[0].drawBlock(context);
-
-            }
+            this.Goombas.forEach((goomba) => {
+                if (goomba.status && this.player.status) {
+                    goomba.drawBlock(context);
+                }
+            });
 
         }
 
         marioWinAnimation(context) {
             if (this.winY < this.height - this.grassHeight - this.BLOCK_SIZE * 2) {
                 this.winY += 0.5;
-                console.log('1');
                 this.marioClimbAnimation(context);
             }
         }

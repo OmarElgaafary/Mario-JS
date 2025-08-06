@@ -1,5 +1,7 @@
 import { Block } from "./block.js";
 
+let Goombas = [];
+
 export class Goomba extends Block {
     constructor(position, game) {
         super(position, game);
@@ -13,11 +15,10 @@ export class Goomba extends Block {
 
     update() {
 
-        // if (this.game.Grass[0].isOnGrass() && this.y + this.height > this.game.height - this.game.grassHeight) {
-        //     this.y += 5;
-        //     this.handleInput.keys = [];
-        //     return;
-        // }
+        if (this.game.Grass[0].isOnGrass() && this.y + this.height > this.game.height - this.game.grassHeight) {
+            this.y += 5;
+            return;
+        }
 
         const availableBlocks = this.game.Walls;
         availableBlocks.forEach((wall) => {
@@ -44,4 +45,12 @@ export class Goomba extends Block {
 
     }
 
+}
+
+export function getGoombas(game) {
+    Goombas.push(new Goomba({ x: game.player.width * 8, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
+    Goombas.push(new Goomba({ x: game.player.width * 16, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
+    Goombas.push(new Goomba({ x: game.player.width * 32, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
+
+    return Goombas;
 }
