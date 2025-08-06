@@ -34,6 +34,7 @@ window.addEventListener('load', () => {
             this.winY = this.Flag.y + this.BLOCK_SIZE / 2;
             this.marioClimb1 = document.getElementById('mario-climb-1');
             this.marioClimb2 = document.getElementById('mario-climb-2');
+            this.scoreX = this.scoreY = 50;
         }
 
         updateGrass(context) {
@@ -86,9 +87,13 @@ window.addEventListener('load', () => {
         draw(context) {
             this.marioBackGround.drawBackGround(context);
 
+            this.Flag.drawFlag(context);
 
-            if (this.player.winStatus)
+            if (this.player.winStatus) {
                 this.marioWinAnimation(context);
+                this.gameWinAnimation(context)
+
+            }
 
             this.Walls.forEach((wall) => {
                 if (wall.bumped) wall.luckyStarAnimation(context);
@@ -108,6 +113,7 @@ window.addEventListener('load', () => {
                     this.player.drawPlayer(context);
                 else if (!this.player.status) {
                     this.player.marioDeathAnimation(context);
+                    this.gameLoseAnimation(context);
                 }
             }
 
@@ -116,6 +122,7 @@ window.addEventListener('load', () => {
                     goomba.drawGoomba(context);
                 }
             });
+            if (!this.player.winStatus && this.player.status) this.gameDrawScore(context);
 
         }
 
@@ -133,9 +140,42 @@ window.addEventListener('load', () => {
                 if (this.winImage === this.marioClimb1) this.winImage = this.marioClimb2
                 else this.winImage = this.marioClimb1
             }
-            context.drawImage(this.winImage, this.Flag.x + this.BLOCK_SIZE / 2, this.winY, 50, 75);
+            context.drawImage(this.winImage, this.Flag.x + 15, this.winY, 50, 75);
         }
 
+        gameDrawScore(context) {
+            ctx.font = "32px 'Press Start 2P'";
+            ctx.fillStyle = 'white';
+            ctx.fillText(`Score: ${newGame.gameScore}`, this.scoreX, this.scoreY);
+        }
+
+        gameWinAnimation(context) {
+            ctx.save();
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.font = "64px 'Press Start 2P'";
+            ctx.fillStyle = 'green';
+            ctx.fillText(`You Won!`, canvasWidth / 2, canvasHeight / 2);
+            ctx.restore();
+            ctx.save();
+            this.gameDrawScore();
+            ctx.restore();
+        }
+
+        gameLoseAnimation(context) {
+            ctx.save();
+
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.font = "64px 'Press Start 2P'";
+            ctx.fillStyle = 'red';
+            ctx.fillText(`Game Over!`, canvasWidth / 2, canvasHeight / 2);
+            ctx.restore();
+
+            ctx.save();
+            this.gameDrawScore();
+            ctx.restore();
+        }
     }
 
     const newGame = new Game({
@@ -148,9 +188,6 @@ window.addEventListener('load', () => {
         if (newGame.status)
             newGame.update(ctx);
         newGame.draw(ctx);
-        ctx.font = "32px 'Press Start 2P'";
-        ctx.fillStyle = 'white';
-        ctx.fillText(`Score: ${newGame.gameScore}`, 50, 50);
         requestAnimationFrame(animate);
     }
 

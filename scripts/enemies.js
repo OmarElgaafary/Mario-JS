@@ -70,6 +70,9 @@ export function getGoombas(game) {
     Goombas.push(new Goomba({ x: game.player.width * 44, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
 
     Goombas.push(new Goomba({ x: game.player.width * 66, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
+    Goombas.push(new Goomba({ x: game.player.width * 100, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
+    Goombas.push(new Goomba({ x: game.player.width * 105, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
+
 
 
 

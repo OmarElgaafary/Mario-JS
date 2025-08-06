@@ -69,9 +69,6 @@ export class Player {
     }
 
     drawPlayer(context) {
-        context.strokeStyle = 'black';
-        context.strokeRect(this.x, this.y, this.width, this.height);
-
         if (!this.onGround() && !this.onBlock) {
             let jumpingImage = this.handleInput.lastkey === 'ArrowRight' ? this.marioJumpRight : this.marioJumpLeft;
             context.drawImage(jumpingImage, 0, 0, this.width, this.spriteSheetHeight, this.x, this.y, this.width, this.spriteSheetHeight)
@@ -111,6 +108,10 @@ export class Player {
 
     marioDeathAnimation(context) {
         this.gameFrame++;
+        this.handleInput.keys = [];
+        this.vx = 0;
+        this.vy = 0;
+        this.isMoving = false;
         this.spriteSheetHeight = this.spriteSheetWidth = 50;
         if (!this.tempImage) this.tempImage = this.marioDeath1;
         if (this.gameFrame % 16 == 0) {
