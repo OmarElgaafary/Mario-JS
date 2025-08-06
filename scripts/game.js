@@ -20,6 +20,7 @@ window.addEventListener('load', () => {
             this.height = context.height;
             this.grassHeight = 75;
             this.player = new Player(this);
+            this.gameScore = 0;
             this.gameSpeed = 0;
             this.backGroundMultipler = 1;
             this.marioBackGround = new Layer(document.getElementById('mario-map-sky'), this, 427, 0);
@@ -149,7 +150,7 @@ window.addEventListener('load', () => {
         newGame.draw(ctx);
         ctx.font = "32px 'Press Start 2P'";
         ctx.fillStyle = 'white';
-        ctx.fillText('Score', 50, 50);
+        ctx.fillText(`Score: ${newGame.gameScore}`, 50, 50);
         requestAnimationFrame(animate);
     }
 

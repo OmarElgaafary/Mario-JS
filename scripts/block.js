@@ -136,6 +136,7 @@ function marioDeath(goomba, player) {
 }
 
 const marioStomp = (context, goomba, game) => {
+    if (!goomba.stomped) game.gameScore += 100;
     goomba.drawDeathPoints(context);
     goomba.speed = 0;
     goomba.stomped = true;
@@ -178,6 +179,10 @@ class LuckyBlock extends BrickBlock {
     }
 
     luckyStarAnimation(context) {
+        if (!this.coinCollected) {
+            this.game.gameScore += 200;
+            this.coinCollected = true;
+        }
         context.drawImage(this.starImage, 0, this.height * this.currentImage, this.width, this.height, this.x, this.starY, this.width, this.height);
         if (this.currentImage > 3) this.currentImage = 0;
         else if (this.game.player.gameFrame % 16 === 0) this.currentImage++;
