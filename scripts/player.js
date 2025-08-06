@@ -19,13 +19,15 @@ export class Player {
         this.marioJumpLeft = document.getElementById('mario-jump-left');
         this.marioDeath1 = document.getElementById('mario-death-1');
         this.marioDeath2 = document.getElementById('mario-death-2');
+        this.marioClimb1 = document.getElementById('mario-climb-1');
+        this.marioClimb2 = document.getElementById('mario-climb-2');
         this.handleInput = new HandleInput(this);
         this.frameX = 0;
         this.gameFrame = 0;
         this.isMoving = false;
         this.onBlock = false;
         this.status = true;
-        this.tempImage;
+        this.winStatus = false;
     }
 
     updatePlayer() {
@@ -116,6 +118,6 @@ export class Player {
             else this.tempImage = this.marioDeath1
         }
         context.drawImage(this.tempImage, this.x, this.y, this.width, this.height)
-
     }
+
 }

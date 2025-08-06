@@ -1,7 +1,7 @@
 import { Player } from "./player.js";
 import { Layer } from "./layer.js";
 import { Grass, initalizeGrass } from './grass.js';
-import { Block, initalizeWalls } from './block.js';
+import { Block, initalizeWalls, getFlag } from './block.js';
 import { Goomba } from './enemies.js'
 
 window.addEventListener('load', () => {
@@ -27,9 +27,16 @@ window.addEventListener('load', () => {
             this.Walls = initalizeWalls(this.player, this);
             this.Goombas = [];
             this.goomba1 = this.Goombas.push(new Goomba({ x: this.player.width * 8, y: this.height - this.grassHeight - this.BLOCK_SIZE }, this));
+            this.Flag = getFlag();
+            this.status = true;
+            this.winImage;
+            this.winX = this.Flag.x;
+            this.winY = this.Flag.y + this.BLOCK_SIZE / 2;
+            this.marioClimb1 = document.getElementById('mario-climb-1');
+            this.marioClimb2 = document.getElementById('mario-climb-2');
         }
 
-        updateGrass() {
+        updateGrass(context) {
             this.Grass.forEach(block => {
                 block.x -= 5;
             })
@@ -39,12 +46,26 @@ window.addEventListener('load', () => {
             this.Goombas.forEach((goomba) => {
                 goomba.x -= 5;
             })
+
+            this.Flag.playerWin(context);
+
+
         }
 
-        update() {
-            this.player.updatePlayer();
+        update(context) {
 
-            if (this.Goombas[0].status) {
+            if (this.player.isMoving && Math.floor(this.player.x) >= Math.floor(this.width / 3)) {
+                this.gameSpeed = 2;
+                this.updateGrass(context);
+            }
+            else
+                this.gameSpeed = 0;
+
+            if (!this.player.winStatus && this.status)
+                this.player.updatePlayer();
+
+
+            if (this.Goombas[0].status && this.player.status) {
                 this.Goombas[0].collision(this.player);
                 this.Goombas[0].update();
             }
@@ -52,32 +73,40 @@ window.addEventListener('load', () => {
             this.marioBackGround.updateBackGround(this.gameSpeed);
 
             this.Walls.forEach((wall) => {
-                wall.collision(this.player);
+                if (wall.type !== 'flag')
+                    wall.collision(this.player);
             });
-            if (this.player.isMoving && Math.floor(this.player.x) >= Math.floor(this.width / 3)) {
-                this.gameSpeed = 2;
-                this.updateGrass();
-            }
-            else
-                this.gameSpeed = 0;
+
 
 
         }
 
         draw(context) {
             this.marioBackGround.drawBackGround(context);
-            this.Grass.forEach(block => {
-                block.drawGrass(context);
-            }
-            )
+
+
+            if (this.player.winStatus)
+                this.marioWinAnimation(context);
+
             this.Walls.forEach((wall) => {
                 if (wall.bumped) wall.luckyStarAnimation(context);
                 wall.drawBlock(context);
             });
-            if (this.player.status)
-                this.player.drawPlayer(context);
-            else {
-                this.player.marioDeathAnimation(context);
+
+
+            this.Grass.forEach(block => {
+                block.drawGrass(context);
+            }
+            )
+
+
+
+            if (!this.player.winStatus) {
+                if (this.player.status)
+                    this.player.drawPlayer(context);
+                else if (!this.player.status) {
+                    this.player.marioDeathAnimation(context);
+                }
             }
 
 
@@ -86,6 +115,24 @@ window.addEventListener('load', () => {
 
             }
 
+        }
+
+        marioWinAnimation(context) {
+            if (this.winY < this.height - this.grassHeight - this.BLOCK_SIZE * 2) {
+                this.winY += 0.5;
+                console.log('1');
+                this.marioClimbAnimation(context);
+            }
+        }
+
+        marioClimbAnimation(context) {
+            this.player.gameFrame++;
+            if (!this.winImage) this.winImage = this.marioClimb1;
+            if (this.player.gameFrame % 16 === 0) {
+                if (this.winImage === this.marioClimb1) this.winImage = this.marioClimb2
+                else this.winImage = this.marioClimb1
+            }
+            context.drawImage(this.winImage, this.Flag.x + this.BLOCK_SIZE / 2, this.winY, 50, 75);
         }
 
     }
@@ -97,7 +144,8 @@ window.addEventListener('load', () => {
 
     function animate() {
         ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-        newGame.update();
+        if (newGame.status)
+            newGame.update(ctx);
         newGame.draw(ctx);
         ctx.font = "32px 'Press Start 2P'";
         ctx.fillStyle = 'white';

@@ -1,5 +1,5 @@
 let Walls = [];
-
+let flag;
 
 export class Block {
     constructor(position, game) {
@@ -53,11 +53,6 @@ export class Block {
             } else player.onBlock = false;
             if (wasBelow && player.y < this.y + this.height) {
                 if (this.type === 'goomba' && player === this.game.player) {
-                    // player.speed = 0;
-                    // player.status = false;
-                    // setInterval(() => {
-                    //     player
-                    // });
 
                 }
                 player.y = this.y + this.height;
@@ -67,22 +62,20 @@ export class Block {
             }
             if (wasLeft && player.x + player.width >= this.x) {
                 if (this.type === 'goomba' && player === this.game.player) {
-                    player.speed = 0;
-                    player.status = false;
-                    setInterval(() => {
-                        if (player.y < this.game.height) {
-                            player.y += 2.5;
-                        }
-                        else player.y = 500;
-                    }, 20)
-
+                    marioDeath(this, this.game.player);
                 }
                 player.x = this.x - player.width;
-                console.log('i did something')
             }
-            if (wasRight && player.x <= this.x + this.width) player.x = this.x + this.width;
+            if (wasRight && player.x <= this.x + this.width) {
+                if (this.type === 'goomba' && player === this.game.player) {
+                    marioDeath(this, this.game.player);
+                }
+                player.x = this.x + this.width;
+            }
 
         }
+
+
 
         return null;
     }
@@ -92,7 +85,6 @@ export class Block {
         if (player.y + player.height > this.y && this.y + this.height > player.y
             && player.x + player.width > this.x && this.x + this.width > player.x
         ) {
-            console.log(this)
             return true
 
         }
@@ -119,6 +111,35 @@ export class Block {
             this.y -= 5;
         }, 50);
     }
+}
+
+function marioDeath(goomba, player) {
+    player.speed = 0;
+    player.status = false;
+    const originalY = player.y;
+    const deathPromise = new Promise((resolve) => {
+        {
+            const originalY = player.y;
+            const jump = setInterval(() => {
+                if (player.y > originalY - 50) player.y -= 2.5;
+                else {
+                    clearInterval(jump);
+                    resolve();
+                }
+            })
+        }
+    }, 2000);
+
+    deathPromise.then(() => {
+        player.speed = 0;
+        player.status = false;
+        setInterval(() => {
+            if (player.y < goomba.game.height) {
+                player.y += 5;
+            }
+            else player.y = 500;
+        }, 20)
+    })
 }
 
 class TubeBlock extends Block {
@@ -181,6 +202,25 @@ class LuckyBlock extends BrickBlock {
         if (!this.coinCollected) this.starMovement();
     }
 }
+
+class Flag extends Block {
+    constructor(position, game) {
+        super(position, game);
+        this.type = 'flag';
+        this.height = 250;
+        this.width = 100;
+        this.image = document.getElementById('mario-flag');
+
+    }
+
+    playerWin(context) {
+        if (this.detectCollision(this.game.player) && !this.game.player.handleInput.keys.includes('Space')) {
+            this.game.player.winStatus = true;
+            this.game.player.isMoving = false;
+
+        }
+    }
+};
 
 function createStairs(game, height, reverse, blockSpace, peak) {
     if (height === 1) {
@@ -276,6 +316,8 @@ export function initalizeWalls(player, game) {
     Walls.push(new BrickBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width, y: player.height * 1 }, game));
 
 
+
+
     makeStairs(game, 4, false, 3, 4);
     makeReverseStairs(game, 4, true, 3, 4);
     makeStairs(game, 4, false, 3, 4)
@@ -286,6 +328,18 @@ export function initalizeWalls(player, game) {
     makeStairs(game, 6, false, 1, 6);
     createBlockStack(game, 6);
 
+    Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 7, y: game.height - game.grassHeight - game.BLOCK_SIZE * 2 }, game, 'Top'));
+    const flagOBJ = new Flag({ x: Walls[Walls.length - 1].x + 2, y: game.height - game.grassHeight - game.BLOCK_SIZE * 2 - 250 + 5 }, game);
+    Walls.push(flagOBJ);
+    flag = flagOBJ;
+
+
+
+
 
     return Walls;
+}
+
+export function getFlag() {
+    return flag;
 }

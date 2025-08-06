@@ -12,6 +12,13 @@ export class Goomba extends Block {
     }
 
     update() {
+
+        // if (this.game.Grass[0].isOnGrass() && this.y + this.height > this.game.height - this.game.grassHeight) {
+        //     this.y += 5;
+        //     this.handleInput.keys = [];
+        //     return;
+        // }
+
         const availableBlocks = this.game.Walls;
         availableBlocks.forEach((wall) => {
             if (!wall.detectCollision(this)) {
