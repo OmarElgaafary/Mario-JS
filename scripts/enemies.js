@@ -21,8 +21,7 @@ export class Goomba extends Block {
     }
 
     update() {
-
-        if (this.game.Grass[0].isOnGrass() && this.y + this.height > this.game.height - this.game.grassHeight) {
+        if (this.game.Grass[0].isOnGrass(this) === false) {
             this.y += 5;
             return;
         }
@@ -57,7 +56,7 @@ export class Goomba extends Block {
         context.fillStyle = 'white';
         context.fillText('100', this.x, this.y - this.game.BLOCK_SIZE / 2);
         setTimeout(() => {
-            context.clearRect(this.x, this.y - this.game.BLOCK_SIZE / 2 , this.game.BLOCK_SIZE, this.game.BLOCK_SIZE);
+            context.clearRect(this.x, this.y - this.game.BLOCK_SIZE / 2, this.game.BLOCK_SIZE, this.game.BLOCK_SIZE);
         }, 3000)
     }
 
@@ -66,7 +65,13 @@ export class Goomba extends Block {
 export function getGoombas(game) {
     Goombas.push(new Goomba({ x: game.player.width * 8, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
     Goombas.push(new Goomba({ x: game.player.width * 16, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
-    Goombas.push(new Goomba({ x: game.player.width * 32, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
+    Goombas.push(new Goomba({ x: game.player.width * 28, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
+    Goombas.push(new Goomba({ x: game.player.width * 36, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
+    Goombas.push(new Goomba({ x: game.player.width * 44, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
+
+    Goombas.push(new Goomba({ x: game.player.width * 66, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
+
+
 
     return Goombas;
 }

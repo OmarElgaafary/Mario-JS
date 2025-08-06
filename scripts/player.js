@@ -33,7 +33,7 @@ export class Player {
     updatePlayer() {
 
         // pits 
-        if (this.game.Grass[0].isOnGrass() && this.y + this.height > this.game.height - this.game.grassHeight) {
+        if (this.game.Grass[0].isOnGrass(this) === false && this.y + this.height > this.game.height - this.game.grassHeight) {
             this.y += 5;
             this.handleInput.keys = [];
             return;

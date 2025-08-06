@@ -16,12 +16,12 @@ export class Grass {
         }
     }
 
-    isOnGrass() {
+    isOnGrass(target) {
         for (let i = 0; i < this.game.Grass.length - 1; i++) {
-            if (this.game.Grass[i].x + this.game.Grass[i].width < this.game.player.x
-                && this.game.Grass[i + 1].x > this.game.player.x + this.game.player.width
+            if (this.game.Grass[i].x + this.game.Grass[i].width < target.x
+                && this.game.Grass[i + 1].x > target.x + target.width
             )
-                return true;
+                return false;
             else
                 continue;
         }
