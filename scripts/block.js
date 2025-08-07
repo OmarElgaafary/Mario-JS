@@ -345,7 +345,7 @@ export function initalizeWalls(player, game) {
     createBlockStack(game, 6);
 
     Walls.push(new TubeBlock({ x: Walls[Walls.length - 1].x + Walls[Walls.length - 1].width * 7, y: game.height - game.grassHeight - game.BLOCK_SIZE * 2 }, game, 'Top'));
-    const flagOBJ = new Flag({ x: Walls[Walls.length - 1].x + 10, y: game.height - game.grassHeight - game.BLOCK_SIZE * 2 - (game.BLOCK_SIZE * 5) }, game);
+    const flagOBJ = new Flag({ x: Walls[Walls.length - 1].x + game.BLOCK_SIZE / 2 + 10, y: game.height - game.grassHeight - game.BLOCK_SIZE * 2 - (game.BLOCK_SIZE * 5) }, game);
     Walls.push(flagOBJ);
     flag = flagOBJ;
 

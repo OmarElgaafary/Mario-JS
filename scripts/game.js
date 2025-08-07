@@ -142,7 +142,7 @@ window.addEventListener('load', () => {
                 if (this.winImage === this.marioClimb1) this.winImage = this.marioClimb2
                 else this.winImage = this.marioClimb1
             }
-            context.drawImage(this.winImage, this.Flag.x + 15, this.winY, 50, 75);
+            context.drawImage(this.winImage, this.Flag.x - 4 , this.winY, 50, 75);
         }
 
         gameDrawScore(context) {
