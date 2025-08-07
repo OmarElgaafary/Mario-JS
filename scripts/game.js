@@ -69,9 +69,11 @@ window.addEventListener('load', () => {
             this.Goombas.forEach((goomba) => {
                 if (goomba.status && this.player.status) {
                     goomba.collision(context, this.player);
+                    goomba.isPlayerColliding();
                     goomba.update();
                 }
             });
+
 
             this.marioBackGround.updateBackGround(this.gameSpeed);
 

@@ -107,7 +107,7 @@ export class Block {
     }
 }
 
-function marioDeath(goomba, player) {
+export function marioDeath(goomba, player) {
     player.speed = 0;
     player.status = false;
     const originalY = player.y;
@@ -126,7 +126,6 @@ function marioDeath(goomba, player) {
 
     deathPromise.then(() => {
         player.speed = 0;
-        player.status = false;
         setInterval(() => {
             if (player.y < goomba.game.height) {
                 player.y += 5;

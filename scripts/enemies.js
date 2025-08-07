@@ -1,4 +1,4 @@
-import { Block } from "./block.js";
+import { Block, marioDeath } from "./block.js";
 
 let Goombas = [];
 
@@ -6,7 +6,7 @@ export class Goomba extends Block {
     constructor(position, game) {
         super(position, game);
         this.type = 'goomba';
-        this.direction = 'Left';
+        this.direction = 'Right';
         this.image = document.getElementById('mario-goomba-left');
         this.speed = 0.005;
         this.status = true;
@@ -29,7 +29,7 @@ export class Goomba extends Block {
         const availableBlocks = this.game.Walls;
         availableBlocks.forEach((wall) => {
             if (!wall.detectCollision(this)) {
-                this.x += this.direction === 'Left' ? this.speed : -this.speed;
+                this.x += this.direction === 'Left' ? -this.speed : this.speed;
             }
             else {
                 if (this.direction === 'Left') {
@@ -60,6 +60,18 @@ export class Goomba extends Block {
         }, 3000)
     }
 
+    isPlayerColliding() {
+        const player = this.game.player;
+        if (this.game.player.onGround()) {
+            if (this.direction === 'Left' && player.handleInput.direction.x === 1 && Math.floor(player.x + player.width) === Math.floor(this.x)) {
+                marioDeath(this, player);
+            }
+            else if (this.direction === 'Right' && Math.floor(this.x + this.width) === Math.floor(player.x)) {
+                marioDeath(this, player);
+            }
+        }
+    }
+
 }
 
 export function getGoombas(game) {
@@ -68,7 +80,6 @@ export function getGoombas(game) {
     Goombas.push(new Goomba({ x: game.player.width * 28, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
     Goombas.push(new Goomba({ x: game.player.width * 36, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
     Goombas.push(new Goomba({ x: game.player.width * 44, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
-
     Goombas.push(new Goomba({ x: game.player.width * 66, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
     Goombas.push(new Goomba({ x: game.player.width * 100, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));
     Goombas.push(new Goomba({ x: game.player.width * 105, y: game.height - game.grassHeight - game.BLOCK_SIZE }, game));

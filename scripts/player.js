@@ -120,5 +120,4 @@ export class Player {
         }
         context.drawImage(this.tempImage, this.x, this.y, this.width, this.height)
     }
-
 }
